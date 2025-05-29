@@ -1,0 +1,56 @@
+# Warlock: Affliction
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat
+actions.precombat+=/dark_intent
+actions.precombat+=/summon_pet,pet_type=felhunter
+actions.precombat+=/snapshot_stats
+actions.precombat+=/grimoire_of_sacrifice,if=talent.grimoire_of_sacrifice.enabled
+actions.precombat+=/soul_swap,if=glyph.soul_swap.enabled
+actions.precombat+=/potion
+
+## Default
+actions=use_item,name=trinket1,if=cooldown.dark_soul.remains<5
+actions+=/potion,if=buff.dark_soul.up
+actions+=/berserking,if=buff.dark_soul.up
+actions+=/blood_fury,if=buff.dark_soul.up
+actions+=/dark_soul,if=!talent.archimondes_vengeance.enabled|cooldown.archimondes_vengeance.remains>15
+actions+=/run_action_list,name=move,if=movement.remains>0
+actions+=/run_action_list,name=aoe,if=active_enemies>=5
+actions+=/run_action_list,name=st,if=active_enemies<5
+actions+=/fel_flame,moving=1
+
+## Single Target Rotation
+actions.st=haunt,if=!ticking|remains<cast_time
+actions.st+=/summon_doomguard,if=!talent.grimoire_of_sacrifice.enabled&active_enemies<5
+actions.st+=/summon_infernal,if=!talent.grimoire_of_sacrifice.enabled&active_enemies>=5
+actions.st+=/agony,if=remains<tick_time
+actions.st+=/unstable_affliction,if=remains<tick_time
+actions.st+=/corruption,if=remains<tick_time
+actions.st+=/dark_soul,if=cooldown.soulburn.remains<30
+actions.st+=/haunt,if=soul_shard>=1&(buff.haunting_spirits.remains<5|buff.haunting_spirits.stack<2)
+actions.st+=/life_tap,if=mana.pct<40
+actions.st+=/drain_soul,interrupt=1,if=target.health.pct<20&time_to_die>tick_time*3
+actions.st+=/malefic_grasp,if=dot.unstable_affliction.ticking&dot.agony.ticking&dot.corruption.ticking
+actions.st+=/malefic_grasp,if=dot.unstable_affliction.ticking&dot.agony.ticking
+actions.st+=/shadow_bolt
+
+## AoE Rotation (5+ targets)
+actions.aoe+=/life_tap,if=mana.pct<40
+actions.aoe+=/agony,cycle_targets=1,if=target!=focus&remains<tick_time&active_enemies<5
+actions.aoe+=/corruption,cycle_targets=1,if=target!=focus&remains<tick_time&active_enemies<5
+actions.aoe+=/seed_of_corruption,cycle_targets=1,if=!ticking&active_enemies>3
+actions.aoe+=/haunt,if=!ticking&soul_shard>=1
+actions.aoe+=/soulburn,if=talent.soulburn_seed_of_corruption.enabled&!buff.soulburn.up
+actions.aoe+=/seed_of_corruption,if=buff.soulburn.up
+actions.aoe+=/malefic_grasp,if=dot.unstable_affliction.ticking&dot.agony.ticking&dot.corruption.ticking
+actions.aoe+=/shadow_bolt
+
+## Movement Rotation
+actions.move+=/life_tap,if=mana.pct<40
+actions.move+=/agony,if=remains<tick_time
+actions.move+=/corruption,if=remains<tick_time
+actions.move+=/fel_flame,if=talent.kiljaedens_cunning.enabled&cooldown.kiljaedens_cunning.up
+actions.move+=/drain_life,if=talent.kiljaedens_cunning.enabled
+actions.move+=/fel_flame

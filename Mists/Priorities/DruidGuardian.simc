@@ -1,0 +1,72 @@
+# Druid: Guardian
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat Actions
+actions.precombat+=/bear_form
+actions.precombat+=/mark_of_the_wild,if=!buff.mark_of_the_wild.up&group
+actions.precombat+=/symbiosis,if=!buff.symbiosis.up&target.exists
+actions.precombat+=/healing_touch,if=talent.dream_of_cenarius.enabled&!buff.dream_of_cenarius_damage.up
+actions.precombat+=/savage_defense,if=!buff.savage_defense.up
+
+## Main Action Priority List
+actions+=/auto_attack
+actions+=/bear_form,if=!buff.bear_form.up
+actions+=/call_action_list,name=emergency
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=defensives,if=health.pct<80|incoming_damage_5s>health.max*0.25
+actions+=/call_action_list,name=maintain_dots
+actions+=/call_action_list,name=rage_management
+
+## Emergency Actions (Interrupts and Immediate Threats)
+actions.emergency+=/skull_bash,if=target.casting&target.debuff.casting.reaction
+actions.emergency+=/mighty_bash,if=talent.mighty_bash.enabled&target.casting&!target.debuff.mighty_bash.up
+actions.emergency+=/wild_charge,if=talent.wild_charge.enabled&target.distance>8&target.distance<25
+actions.emergency+=/growl,if=!target.debuff.growl.up&target.target!=player
+
+## Major Cooldowns
+actions.cooldowns+=/berserk,if=!buff.berserk.up&(rage<40|target.time_to_die<20|buff.incarnation_son_of_ursoc.up)
+actions.cooldowns+=/incarnation_son_of_ursoc,if=talent.incarnation.enabled&!buff.incarnation_son_of_ursoc.up&(health.pct<60|incoming_damage_10s>health.max*0.5|target.time_to_die<35)
+actions.cooldowns+=/enrage,if=!buff.enrage.up&rage<60&target.time_to_die>15
+actions.cooldowns+=/heart_of_the_wild,if=talent.heart_of_the_wild.enabled&(health.pct<40|target.time_to_die<50|buff.berserk.up)
+actions.cooldowns+=/natures_vigil,if=talent.natures_vigil.enabled&health.pct<70
+actions.cooldowns+=/force_of_nature,if=talent.force_of_nature.enabled&(active_enemies>=3|incoming_damage_10s>health.max*0.4)
+
+## Defensive Cooldowns
+actions.defensives+=/survival_instincts,if=health.pct<50&!buff.survival_instincts.up&!buff.frenzied_regeneration.up&incoming_damage_5s>health.max*0.3
+actions.defensives+=/frenzied_regeneration,if=health.pct<40&!buff.frenzied_regeneration.up&(rage>60|glyph.frenzied_regeneration.enabled)
+actions.defensives+=/barkskin,if=health.pct<60&!buff.barkskin.up&(incoming_damage_5s>health.max*0.25|active_enemies>=3)
+actions.defensives+=/renewal,if=talent.renewal.enabled&health.pct<35&cooldown.renewal.ready
+actions.defensives+=/cenarion_ward,if=talent.cenarion_ward.enabled&health.pct<70&!buff.cenarion_ward.up
+actions.defensives+=/savage_defense,if=!buff.savage_defense.up&rage>80&(incoming_damage_5s>health.max*0.2|buff.tooth_and_claw.up)
+actions.defensives+=/healing_touch,if=health.pct<30&(buff.natures_swiftness.up|!buff.bear_form.up)&buff.dream_of_cenarius_healing.stack<2
+
+## DoT and Debuff Maintenance
+actions.maintain_dots+=/pulverize,if=debuff.lacerate.stack=3&(!buff.pulverize.up|buff.pulverize.remains<8)
+actions.maintain_dots+=/lacerate,if=debuff.lacerate.stack<3|(debuff.lacerate.remains<4.5&debuff.lacerate.stack=3)
+actions.maintain_dots+=/thrash_bear,if=!debuff.thrash_bear.up|debuff.thrash_bear.remains<3|(active_enemies>1&debuff.thrash_bear.remains<6)
+actions.maintain_dots+=/mangle,if=!debuff.mangle.up|debuff.mangle.remains<10
+actions.maintain_dots+=/faerie_fire,if=debuff.weakened_armor.stack<3&target.armor>0
+
+## Rage Management and Spending
+actions.rage_management+=/call_action_list,name=generate_rage,if=rage<60&target.time_to_die>8
+actions.rage_management+=/call_action_list,name=spend_rage,if=rage>60
+actions.rage_management+=/call_action_list,name=filler_actions
+
+## Rage Generation Priority
+actions.generate_rage+=/mangle,if=cooldown.mangle.ready
+actions.generate_rage+=/thrash_bear,if=cooldown.thrash_bear.ready&(active_enemies>1|!debuff.thrash_bear.up)
+actions.generate_rage+=/lacerate,if=debuff.lacerate.stack<3&rage<85
+actions.generate_rage+=/swipe_bear,if=active_enemies>3&rage<85
+
+## Rage Spending Priority
+actions.spend_rage+=/maul,if=buff.tooth_and_claw.up&rage>30
+actions.spend_rage+=/maul,if=rage>85&active_enemies=1&(!buff.tooth_and_claw.up|buff.savage_defense.up)
+actions.spend_rage+=/swipe_bear,if=active_enemies>2&rage>50
+actions.spend_rage+=/maul,if=rage>90
+
+## Filler Actions
+actions.filler_actions+=/challenging_roar,if=active_enemies>1&!target.debuff.challenging_roar.up&rage>15
+actions.filler_actions+=/demoralizing_roar,if=!target.debuff.demoralizing_roar.up&target.armor>0&rage>10
+actions.filler_actions+=/lacerate,if=debuff.lacerate.stack<3&rage>15
+actions.filler_actions+=/swipe_bear,if=active_enemies>1&rage>15

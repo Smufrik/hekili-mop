@@ -1,0 +1,28 @@
+# Warlock: Destruction
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat
+actions.precombat+=/dark_intent
+actions.precombat+=/summon_pet,pet_type=imp
+actions.precombat+=/snapshot_stats
+actions.precombat+=/grimoire_of_sacrifice,if=talent.grimoire_of_sacrifice.enabled
+actions.precombat+=/soul_fire
+actions.precombat+=/incinerate,if=buff.ember_master.down&time>0
+actions.precombat+=/potion
+
+## Default
+actions+=/fel_flame,moving=1,if=movement.remains>gcd
+actions+=/immolate,if=remains<cast_time
+actions+=/conflagrate,if=ember_react
+actions+=/havoc,target=2,if=active_enemies>1
+actions+=/shadowburn,if=ember_react&target.health.pct<20
+actions+=/immolate,if=remains<5|!ticking
+actions+=/chaos_bolt,if=ember_react&buff.dark_soul.up&!target.health.pct<20
+actions+=/chaos_bolt,if=ember_react&(ember_master>3|burning_ember>=3.5|target.time_to_die<20)&!target.health.pct<20
+actions+=/fire_and_brimstone,if=active_enemies>3&burning_ember>=2.5
+actions+=/rain_of_fire,if=active_enemies>2&burning_ember>0
+actions+=/fel_flame,if=buff.fire_and_brimstone.up
+actions+=/incinerate,if=buff.fire_and_brimstone.up
+actions+=/conflagrate
+actions+=/incinerate

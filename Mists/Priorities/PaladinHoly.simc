@@ -1,0 +1,33 @@
+# Paladin: Holy
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/seal_of_insight
+actions.precombat+=/blessing_of_kings
+actions.precombat+=/beacon_of_light,if=active_dot.beacon_of_light=0
+actions.precombat+=/sacred_shield,if=talent.sacred_shield.enabled
+
+actions+=/rebuke
+actions+=/avenging_wrath
+actions+=/holy_avenger,if=talent.holy_avenger.enabled
+actions+=/divine_plea,if=mana.pct<60
+actions+=/divine_favor
+actions+=/blood_fury
+actions+=/berserking
+actions+=/arcane_torrent
+actions+=/potion
+actions+=/use_items
+actions+=/call_action_list,name=spenders,strict=1,if=holy_power=3|buff.divine_purpose.up
+actions+=/divine_plea,if=mana.pct<85
+actions+=/holy_shock
+actions+=/judgment,if=glyph.double_jeopardy.enabled
+actions+=/judgment,if=active_enemies>1&glyph.double_jeopardy.enabled
+actions+=/crusader_strike,if=active_enemies<4
+actions+=/holy_prism,if=talent.holy_prism.enabled
+actions+=/lights_hammer,if=talent.lights_hammer.enabled
+actions+=/execution_sentence,if=talent.execution_sentence.enabled
+actions+=/arcane_torrent,if=mana.pct<95
+
+actions.spenders+=/light_of_dawn,if=group&raid_health.deficit>10000
+actions.spenders+=/word_of_glory,if=raid_health.deficit>10000
+actions.spenders+=/eternal_flame,if=talent.eternal_flame.enabled&buff.eternal_flame.remains<3

@@ -1,0 +1,62 @@
+# Priest: Shadow
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/inner_fire
+actions.precombat+=/shadowform,if=!buff.shadowform.up
+actions.precombat+=/power_word_fortitude,if=!buff.power_word_fortitude.up
+actions.precombat+=/vampiric_embrace,if=!buff.vampiric_embrace.up
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+# Main rotation - calls specialized action lists
+actions+=/silence
+actions+=/shadowform,if=!buff.shadowform.up
+actions+=/dispersion,if=mana.pct<5
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=aoe,if=active_enemies>=4
+actions+=/call_action_list,name=single_target
+
+# Cooldowns
+actions.cooldowns+=/potion,if=buff.bloodlust.react|target.time_to_die<=40
+actions.cooldowns+=/power_infusion,if=talent.power_infusion.enabled&buff.bloodlust.up
+actions.cooldowns+=/power_infusion,if=talent.power_infusion.enabled&target.time_to_die<=20
+actions.cooldowns+=/berserking,if=buff.bloodlust.up|buff.power_infusion.up|target.time_to_die<=20
+actions.cooldowns+=/blood_fury,if=buff.bloodlust.up|buff.power_infusion.up|target.time_to_die<=20
+actions.cooldowns+=/arcane_torrent,if=mana.pct<95
+actions.cooldowns+=/shadowfiend,if=talent.mindbender.enabled
+actions.cooldowns+=/shadowfiend,if=!talent.mindbender.enabled&mana.pct<80
+actions.cooldowns+=/mindbender,if=talent.mindbender.enabled
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&(buff.bloodlust.up|buff.power_infusion.up|target.time_to_die<=20)
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&(buff.bloodlust.up|buff.power_infusion.up|target.time_to_die<=20)
+
+# AoE rotation
+actions.aoe+=/mind_sear,if=active_enemies>=4
+actions.aoe+=/vampiric_touch,cycle_targets=1,max_cycle_targets=5,if=(!ticking|remains<cast_time)&target.time_to_die>10&active_enemies<10
+actions.aoe+=/shadow_word_pain,cycle_targets=1,max_cycle_targets=10,if=!ticking&target.time_to_die>10&active_enemies<10
+actions.aoe+=/mind_blast,if=shadow_orb<3&active_enemies<8
+actions.aoe+=/shadow_word_death,if=target.health.pct<20
+actions.aoe+=/cascade,if=talent.cascade.enabled
+actions.aoe+=/divine_star,if=talent.divine_star.enabled
+actions.aoe+=/halo,if=talent.halo.enabled
+actions.aoe+=/mind_flay,interrupt_if=ticks>=2&shadow_orb=3
+actions.aoe+=/devouring_plague,if=shadow_orb=3&ticks_remain<2
+actions.aoe+=/mind_flay,interrupt_if=shadow_orb=3&ticks_remain<2
+
+# Single target rotation
+actions.single_target+=/variable,name=dots_up,value=dot.shadow_word_pain.ticking&dot.vampiric_touch.ticking
+actions.single_target+=/variable,name=orbs_to_spend,value=shadow_orb=3|(buff.shadow_word_insanity.up&shadow_orb>=1)
+actions.single_target+=/devouring_plague,if=variable.orbs_to_spend&variable.dots_up
+actions.single_target+=/shadow_word_death,if=target.health.pct<20
+actions.single_target+=/mind_blast,if=shadow_orb<3&variable.dots_up
+actions.single_target+=/shadow_word_pain,if=!ticking&target.time_to_die>8
+actions.single_target+=/vampiric_touch,if=(!ticking|remains<cast_time+action.mind_blast.cast_time)&target.time_to_die>8
+actions.single_target+=/cascade,if=talent.cascade.enabled
+actions.single_target+=/divine_star,if=talent.divine_star.enabled
+actions.single_target+=/halo,if=talent.halo.enabled
+actions.single_target+=/mind_spike,if=talent.from_darkness_comes_light.enabled&buff.surge_of_darkness.react
+actions.single_target+=/shadow_word_insanity,if=talent.shadow_word_insanity.enabled&buff.shadow_word_insanity.up&shadow_orb>=1
+actions.single_target+=/mind_flay,interrupt_if=ticks>=2&shadow_orb=3
+actions.single_target+=/shadow_word_death,if=cooldown_react
+actions.single_target+=/mind_spike,if=target.time_to_die<=10&target.time_to_die>=3
+actions.single_target+=/mind_flay

@@ -1,0 +1,61 @@
+# Shaman: Enhancement
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/windfury_weapon,if=!enchant.windfury.weapon
+actions.precombat+=/flametongue_weapon,if=!enchant.flametongue.weapon
+actions.precombat+=/lightning_shield,if=!buff.lightning_shield.up
+actions.precombat+=/earth_shield,if=talent.elemental_orbit.enabled&!buff.earth_shield.up
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+# Main rotation
+actions+=/wind_shear
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=aoe,if=active_enemies>2
+actions+=/call_action_list,name=single_target
+
+# Cooldowns
+actions.cooldowns+=/potion,if=buff.bloodlust.up|boss&fight_remains<30|cooldown.ascendance.remains<3
+actions.cooldowns+=/feral_spirit
+actions.cooldowns+=/ascendance,if=cooldown.spirit_walk.remains>5
+actions.cooldowns+=/fire_elemental_totem
+actions.cooldowns+=/earth_elemental_totem,if=!active_totem.fire_elemental_totem
+actions.cooldowns+=/spiritwalkers_grace,moving=1
+actions.cooldowns+=/blood_fury,if=!buff.ascendance.up|buff.ascendance.remains>8
+actions.cooldowns+=/berserking,if=!buff.ascendance.up|buff.ascendance.remains>8
+actions.cooldowns+=/ancestral_swiftness
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&(buff.ascendance.up|cooldown.ascendance.remains>20)
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&(buff.ascendance.up|cooldown.ascendance.remains>20)
+actions.cooldowns+=/stormlash_totem,if=!active_totem.stormlash_totem
+
+# AoE rotation
+actions.aoe+=/flame_shock,if=!ticking&active_enemies<6
+actions.aoe+=/flame_shock,cycle_targets=1,if=!ticking&active_enemies<6
+actions.aoe+=/fire_nova,if=active_dot.flame_shock>=3
+actions.aoe+=/magma_totem,if=!active_totem.magma_totem
+actions.aoe+=/unleash_elements
+actions.aoe+=/primal_strike,if=active_enemies<5
+actions.aoe+=/chain_lightning,if=buff.maelstrom_weapon.stack=5
+actions.aoe+=/lightning_bolt,if=buff.maelstrom_weapon.stack=5
+actions.aoe+=/stormblast
+actions.aoe+=/stormstrike
+actions.aoe+=/lava_lash
+actions.aoe+=/flame_shock,cycle_targets=1,if=!ticking&active_enemies<6
+actions.aoe+=/earth_shock
+actions.aoe+=/fire_nova,if=active_dot.flame_shock>=1
+actions.aoe+=/searing_totem,if=!active_totem.fire_elemental_totem&!active_totem.magma_totem&!active_totem.searing_totem
+
+# Single target rotation
+actions.single_target+=/searing_totem,if=!active_totem.fire_elemental_totem&!active_totem.magma_totem&!active_totem.searing_totem
+actions.single_target+=/flame_shock,if=!ticking|ticking&remains<3
+actions.single_target+=/unleash_elements
+actions.single_target+=/lightning_bolt,if=buff.maelstrom_weapon.stack=5
+actions.single_target+=/stormblast
+actions.single_target+=/stormstrike
+actions.single_target+=/lava_lash
+actions.single_target+=/lightning_bolt,if=buff.maelstrom_weapon.stack>=3&!buff.ascendance.up
+actions.single_target+=/frost_shock,if=talent.frozen_power.enabled&!debuff.frozen_power.up
+actions.single_target+=/earth_shock
+actions.single_target+=/feral_spirit
+actions.single_target+=/fire_nova,if=active_dot.flame_shock>=1

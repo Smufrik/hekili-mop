@@ -1,0 +1,45 @@
+# Paladin: Retribution
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/seal_of_truth
+actions.precombat+=/blessing_of_kings
+actions.precombat+=/blessing_of_might,if=!aura.spell_power_multiplier.up
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+actions+=/rebuke
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=generators
+
+actions.cooldowns+=/potion,if=buff.avenging_wrath.up|boss&fight_remains<30
+actions.cooldowns+=/avenging_wrath
+actions.cooldowns+=/blood_fury,if=buff.avenging_wrath.up
+actions.cooldowns+=/berserking,if=buff.avenging_wrath.up
+actions.cooldowns+=/arcane_torrent,if=buff.avenging_wrath.up
+actions.cooldowns+=/holy_avenger,if=talent.holy_avenger.enabled&buff.avenging_wrath.up
+actions.cooldowns+=/guardian_of_ancient_kings,if=buff.avenging_wrath.up
+actions.cooldowns+=/execution_sentence,if=talent.execution_sentence.enabled&holy_power>=3
+actions.cooldowns+=/lights_hammer,if=talent.lights_hammer.enabled
+actions.cooldowns+=/holy_prism,if=talent.holy_prism.enabled
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&buff.avenging_wrath.up|boss&fight_remains<30
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&buff.avenging_wrath.up|boss&fight_remains<30
+
+actions.generators+=/variable,name=finished,op=set,value=false
+actions.generators+=/call_action_list,name=finishers,strict=1,if=holy_power=5|buff.divine_purpose.up
+actions.generators+=/hammer_of_wrath
+actions.generators+=/judgment,if=talent.sanctified_wrath.enabled&buff.avenging_wrath.up
+actions.generators+=/exorcism,if=talent.sanctified_wrath.enabled&buff.avenging_wrath.up
+actions.generators+=/crusader_strike
+actions.generators+=/judgment
+actions.generators+=/exorcism
+actions.generators+=/holy_prism,if=talent.holy_prism.enabled
+actions.generators+=/lights_hammer,if=talent.lights_hammer.enabled
+actions.generators+=/sacred_shield,if=talent.sacred_shield.enabled&buff.sacred_shield.down
+actions.generators+=/call_action_list,name=finishers,strict=1,if=!variable.finished
+
+actions.finishers+=/variable,name=ds_castable,value=active_enemies>=2
+actions.finishers+=/divine_storm,if=variable.ds_castable
+actions.finishers+=/inquisition,if=buff.inquisition.down|buff.inquisition.remains<5
+actions.finishers+=/templars_verdict
+actions.finishers+=/variable,name=finished,op=set,value=true

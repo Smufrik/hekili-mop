@@ -1,0 +1,51 @@
+# Shaman: Elemental
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/flametongue_weapon,if=!enchant.flametongue.weapon
+actions.precombat+=/lightning_shield,if=!buff.lightning_shield.up
+actions.precombat+=/earth_shield,if=talent.elemental_orbit.enabled&!buff.earth_shield.up
+actions.precombat+=/call_of_the_elements,if=talent.call_of_the_elements.enabled
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+# Main rotation
+actions+=/wind_shear
+actions+=/spiritwalkers_grace,moving=1
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=aoe,if=active_enemies>2
+actions+=/call_action_list,name=single_target
+
+# Cooldowns
+actions.cooldowns+=/potion,if=buff.bloodlust.up|boss&fight_remains<30|cooldown.ascendance.remains<3
+actions.cooldowns+=/ascendance,if=buff.bloodlust.up|target.time_to_die<=25|cooldown.ascendance.remains<2
+actions.cooldowns+=/elemental_mastery,if=!buff.bloodlust.up&time_to_bloodlust>70|target.time_to_die<=20|buff.bloodlust.up&(buff.bloodlust.remains<20+15*set_bonus.tier14_4pc_caster)
+actions.cooldowns+=/fire_elemental_totem,if=!active_totem.fire_elemental_totem
+actions.cooldowns+=/earth_elemental_totem,if=!active_totem.fire_elemental_totem&!active_totem.earth_elemental_totem
+actions.cooldowns+=/ancestral_swiftness
+actions.cooldowns+=/stormlash_totem,if=!active_totem.stormlash_totem
+actions.cooldowns+=/blood_fury
+actions.cooldowns+=/berserking
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&(buff.ascendance.up|cooldown.ascendance.remains>20)
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&(buff.ascendance.up|cooldown.ascendance.remains>20)
+
+# AoE rotation
+actions.aoe+=/magma_totem,if=!active_totem.fire_elemental_totem&!active_totem.magma_totem
+actions.aoe+=/earthquake,if=!ticking&!buff.ascendance.up
+actions.aoe+=/flame_shock,cycle_targets=1,if=!ticking
+actions.aoe+=/chain_lightning
+actions.aoe+=/thunderstorm,if=mana.pct<80
+
+# Single target rotation
+actions.single_target+=/flame_shock,if=!ticking|ticking&remains<3|buff.ascendance.up&remains<3*spell_haste
+actions.single_target+=/lava_burst,if=dot.flame_shock.remains>cast_time
+actions.single_target+=/earth_shock,if=buff.lightning_shield.stack>=lightning_shield_max_stack-1
+actions.single_target+=/searing_totem,if=!active_totem.fire_elemental_totem&!active_totem.magma_totem&!active_totem.searing_totem
+actions.single_target+=/earth_elemental_totem,if=!active_totem.fire_elemental_totem&!active_totem.earth_elemental_totem
+actions.single_target+=/ancestral_swiftness,if=!buff.ascendance.up
+actions.single_target+=/elemental_blast,if=talent.elemental_blast.enabled
+actions.single_target+=/earth_shock,if=buff.lightning_shield.stack>3
+actions.single_target+=/unleash_elements
+actions.single_target+=/lightning_bolt
+actions.single_target+=/thunderstorm,if=mana.pct<80
+actions.single_target+=/frost_shock,moving=1

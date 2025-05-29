@@ -1,0 +1,46 @@
+# Shaman: Restoration
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/earthliving_weapon,if=!enchant.earthliving.weapon
+actions.precombat+=/water_shield,if=!buff.water_shield.up
+actions.precombat+=/earth_shield,if=talent.elemental_orbit.enabled&!buff.earth_shield.up
+actions.precombat+=/call_of_the_elements,if=talent.call_of_the_elements.enabled
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+# Main rotation
+actions+=/wind_shear
+actions+=/spiritwalkers_grace,moving=1
+actions+=/call_action_list,name=healing
+actions+=/call_action_list,name=dps,if=raid_health.pct>90
+
+# Healing rotation
+actions.healing+=/earth_shield,if=!target.buff.earth_shield.up
+actions.healing+=/riptide,if=!buff.riptide.up
+actions.healing+=/healing_stream_totem,if=!active_totem.healing_stream_totem
+actions.healing+=/healing_rain,if=!active_dot.healing_rain
+actions.healing+=/ancestral_swiftness
+actions.healing+=/unleash_elements
+actions.healing+=/chain_heal,if=raid_health.pct<80
+actions.healing+=/healing_wave,if=raid_health.pct<70
+actions.healing+=/greater_healing_wave,if=raid_health.pct<60
+actions.healing+=/healing_surge,if=raid_health.pct<40
+actions.healing+=/healing_tide_totem,if=raid_health.pct<25
+actions.healing+=/ascendance,if=raid_health.pct<25
+actions.healing+=/ancestral_guidance,if=raid_health.pct<40&talent.ancestral_guidance.enabled
+actions.healing+=/mana_tide_totem,if=mana.pct<70
+actions.healing+=/call_action_list,name=cooldowns
+
+# DPS rotation when healing isn't needed
+actions.dps+=/flame_shock,if=!ticking
+actions.dps+=/lava_burst,if=dot.flame_shock.remains>cast_time
+actions.dps+=/lightning_bolt
+actions.dps+=/earth_shock
+
+# Cooldowns
+actions.cooldowns+=/potion,if=buff.ascendance.up|raid_health.pct<50
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&raid_health.pct<60
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&raid_health.pct<60
+actions.cooldowns+=/blood_fury,if=raid_health.pct<70
+actions.cooldowns+=/berserking,if=raid_health.pct<70

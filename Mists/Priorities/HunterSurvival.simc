@@ -1,0 +1,47 @@
+# Hunter: Survival
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat
+actions.precombat+=/aspect_of_the_hawk
+actions.precombat+=/aspect_of_the_iron_hawk,if=talent.aspect_of_the_iron_hawk.enabled
+actions.precombat+=/summon_pet
+actions.precombat+=/hunters_mark
+
+## Default
+actions+=/use_items
+actions+=/counter_shot
+actions+=/silencing_shot,if=target.debuff.casting.up&talent.silencing_shot.enabled
+actions+=/misdirection,if=pet.active&!buff.misdirection.up
+actions+=/blood_fury
+actions+=/berserking
+actions+=/arcane_torrent
+actions+=/ancient_hysteria
+actions+=/hunters_mark,if=!target.debuff.hunters_mark.up
+
+## Cooldowns
+actions+=/stampede,if=buff.rapid_fire.up|cooldown.rapid_fire.remains>120|target.time_to_die<25
+actions+=/rapid_fire,if=!buff.rapid_fire.up
+actions+=/a_murder_of_crows,if=talent.murder_of_crows.enabled&time_to_die>=30
+
+## Tier 4/5/6 Talent Options
+actions+=/dire_beast,if=talent.dire_beast.enabled&focus<90
+actions+=/lynx_rush,if=talent.lynx_rush.enabled
+actions+=/fervor,if=talent.fervor.enabled&focus<=50
+actions+=/glaive_toss,if=talent.glaive_toss.enabled
+actions+=/powershot,if=talent.powershot.enabled&active_enemies>2
+actions+=/barrage,if=talent.barrage.enabled&active_enemies>3
+
+## DoT Management
+actions+=/serpent_sting,if=!ticking
+actions+=/explosive_shot
+actions+=/black_arrow
+actions+=/kill_shot,if=target.health.pct<20
+
+## AoE / Multi-Target
+actions+=/multi_shot,if=active_enemies>2&dot.serpent_sting.remains<2
+actions+=/cobra_shot,if=active_enemies>1&dot.serpent_sting.remains<2
+
+## Focus Management & Rotation Fillers
+actions+=/arcane_shot,if=focus>=67|buff.thrill_of_the_hunt.react
+actions+=/cobra_shot

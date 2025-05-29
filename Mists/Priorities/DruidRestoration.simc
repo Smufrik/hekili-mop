@@ -1,0 +1,81 @@
+# Druid: Restoration
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat
+actions.precombat+=/flask
+actions.precombat+=/food
+actions.precombat+=/mark_of_the_wild
+actions.precombat+=/treant_form,if=talent.force_of_nature.enabled
+
+## Default
+actions+=/skull_bash
+actions+=/natures_cure
+actions+=/prowl,if=!buff.prowl.up&!in_combat
+
+## Mana Management
+actions+=/innervate,if=mana.pct<40
+
+## Tier 1 Talent Options
+actions+=/wild_charge,if=talent.wild_charge.enabled&target.distance>8
+actions+=/displacer_beast,if=talent.displacer_beast.enabled&target.distance>10
+
+## Defensive Abilities
+actions+=/barkskin,if=health.pct<70|buff.barkskin.up
+actions+=/natures_swiftness
+actions+=/renewal,if=health.pct<30&talent.renewal.enabled
+actions+=/ironbark,if=lowest.health.pct<50
+actions+=/might_of_ursoc,if=health.pct<30
+
+## Tier 2 Talent Options
+actions+=/renewal,if=talent.renewal.enabled&health.pct<30
+actions+=/cenarion_ward,if=talent.cenarion_ward.enabled&lowest.health.pct<75
+
+## AoE Healing
+actions+=/tranquility,if=lowest.health.pct<60&active_enemies>2
+
+## Tier 4 Talent Options
+actions+=/incarnation,if=talent.incarnation.enabled&lowest.health.pct<80
+actions+=/force_of_nature,if=talent.force_of_nature.enabled&lowest.health.pct<80
+actions+=/soul_of_the_forest,if=talent.soul_of_the_forest.enabled
+
+## Tier 5 Talent Options
+actions+=/ursols_vortex,if=talent.ursols_vortex.enabled&active_enemies>=3
+actions+=/mighty_bash,if=talent.mighty_bash.enabled&target.debuff.casting.up
+
+## Tier 6 Talent Options
+actions+=/natures_vigil,if=talent.natures_vigil.enabled&lowest.health.pct<70
+actions+=/heart_of_the_wild,if=talent.heart_of_the_forest.enabled&(mana.pct<30|lowest.health.pct<40)
+actions+=/dream_of_cenarius,if=talent.dream_of_cenarius.enabled&!buff.dream_of_cenarius_heal.up
+actions+=/berserking,if=buff.incarnation.up|lowest.health.pct<50
+
+## Single Target Healing
+actions+=/swiftmend,if=lowest.health.pct<75
+actions+=/wild_growth,if=(raid.health.pct<100)&(active_enemies>3)&(buff.harmony.stack=5|talent.soul_of_the_forest.enabled)
+actions+=/genesis,if=dot.rejuvenation.ticking&lowest.health.pct<50
+actions+=/healing_touch,if=buff.natures_swiftness.up
+actions+=/rejuvenation,if=lowest.health.pct<90&!ticking&!buff.germination.up
+actions+=/regrowth,if=lowest.health.pct<30
+actions+=/lifebloom,if=(!ticking|remains<2)&active_enemies>0
+actions+=/cenarion_ward,if=talent.cenarion_ward.enabled&lowest.health.pct<90
+actions+=/swiftmend
+
+## Soul of the Forest specific
+actions+=/wild_growth,if=talent.soul_of_the_forest.enabled&buff.soul_of_the_forest.up&(raid.health.pct<95)
+actions+=/regrowth,if=talent.soul_of_the_forest.enabled&buff.soul_of_the_forest.up&lowest.health.pct<70
+
+## Tree of Life specific (Incarnation)
+actions+=/wild_growth,if=talent.incarnation.enabled&buff.incarnation.up&(raid.health.pct<95)
+actions+=/rejuvenation,if=talent.incarnation.enabled&buff.incarnation.up&lowest.health.pct<85&!ticking
+actions+=/regrowth,if=talent.incarnation.enabled&buff.incarnation.up&lowest.health.pct<65
+
+## Continue single target healing
+actions+=/rejuvenation,if=lowest.health.pct<90&!ticking
+actions+=/regrowth,if=lowest.health.pct<70
+actions+=/nourish,if=lowest.health.pct<90
+actions+=/healing_touch,if=active_enemies>0
+
+## DPS Support (when healing not needed)
+actions+=/moonfire,if=!ticking&lowest.health.pct>85
+actions+=/sunfire,if=!ticking&lowest.health.pct>90
+actions+=/wrath,if=lowest.health.pct>95

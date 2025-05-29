@@ -1,0 +1,53 @@
+# Priest: Discipline
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/inner_fire
+actions.precombat+=/power_word_fortitude,if=!buff.power_word_fortitude.up
+actions.precombat+=/power_word_shield,target=self
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+# Main rotation - calls specialized action lists
+actions+=/silence
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=atonement,if=talent.atonement.enabled
+actions+=/call_action_list,name=healing
+
+# Cooldowns
+actions.cooldowns+=/potion,if=buff.bloodlust.react|target.time_to_die<=40
+actions.cooldowns+=/power_infusion,if=talent.power_infusion.enabled
+actions.cooldowns+=/pain_suppression,if=group&incoming_damage_5s>health.max*0.7
+actions.cooldowns+=/pain_suppression,if=solo&health.pct<30
+actions.cooldowns+=/desperate_prayer,if=health.pct<30
+actions.cooldowns+=/berserking,if=buff.bloodlust.up|buff.power_infusion.up
+actions.cooldowns+=/blood_fury,if=buff.bloodlust.up|buff.power_infusion.up
+actions.cooldowns+=/arcane_torrent,if=mana.pct<95
+actions.cooldowns+=/shadowfiend,if=mana.pct<80
+actions.cooldowns+=/mindbender,if=talent.mindbender.enabled&mana.pct<80
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&(buff.bloodlust.up|buff.power_infusion.up)
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&(buff.bloodlust.up|buff.power_infusion.up)
+
+# Atonement DPS rotation for healing through damage
+actions.atonement+=/spirit_shell,if=talent.spirit_shell.enabled
+actions.atonement+=/archangel,if=buff.evangelism.stack>=5&raid_health.deficit>5000
+actions.atonement+=/holy_fire
+actions.atonement+=/power_word_solace,if=talent.power_word_solace.enabled
+actions.atonement+=/penance,target=enemy
+actions.atonement+=/smite,if=glyph.smite.enabled|buff.surge_of_light.react
+actions.atonement+=/cascade,if=talent.cascade.enabled&raid_health.deficit>10000
+actions.atonement+=/divine_star,if=talent.divine_star.enabled&raid_health.deficit>10000
+actions.atonement+=/halo,if=talent.halo.enabled&raid_health.deficit>10000
+actions.atonement+=/smite
+
+# Direct healing rotation
+actions.healing+=/spirit_shell,if=talent.spirit_shell.enabled
+actions.healing+=/archangel,if=buff.evangelism.stack>=5&raid_health.deficit>5000
+actions.healing+=/prayer_of_mending,if=!ticking&active_dot.prayer_of_mending<1
+actions.healing+=/power_word_shield,if=!buff.power_word_shield.up&target.health.pct<75
+actions.healing+=/prayer_of_healing,if=group&raid_health.deficit>10000
+actions.healing+=/penance,target=friendly,if=health.pct<65
+actions.healing+=/flash_heal,if=health.pct<40|buff.surge_of_light.react
+actions.healing+=/binding_heal,if=talent.binding_heal.enabled&health.pct<75&raid_health.deficit>5000
+actions.healing+=/renew,if=!ticking&health.pct<90
+actions.healing+=/heal

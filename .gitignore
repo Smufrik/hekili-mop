@@ -1,0 +1,91 @@
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# =========================
+# Operating System Files
+# =========================
+
+# OSX
+# =========================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Actual Stuff in my folder.
+Libs/AceAddon-3.0
+Libs/AceBucket-3.0
+Libs/AceComm-3.0
+Libs/AceConfig-3.0
+Libs/AceConsole-3.0
+Libs/AceDB-3.0
+Libs/AceDBOptions-3.0
+Libs/AceEvent-3.0
+Libs/AceGUI-3.0
+Libs/AceGUI-3.0_SFX-Widgets/
+Libs/AceGUI-3.0-SharedMediaWidgets
+Libs/AceHook-3.0
+Libs/AceLocale-3.0
+Libs/AceSerializer-3.0
+Libs/AceTab-3.0
+Libs/AceTimer-3.0
+Libs/CallbackHandler-1.0
+Libs/LibArtifactData-1.0
+Libs/LibChatAnims/
+Libs/LibCompress
+Libs/LibDeflate
+Libs/LibCustomGlow-1.0/
+Libs/LibDataBroker-1-1
+#FIXME:Libs/LibDualSpec-1.0
+Libs/LibItemBuffs-1.0
+Libs/LibNameplateRegistry-1.0/
+Libs/LibRangeCheck-2.0
+Libs/LibSharedMedia-3.0
+Libs/LibSpellRange-1.0
+Libs/LibStub
+Libs/LibTranslit-1.0/
+Libs/SpellFlashCore
+CHANGES.txt
+Textures/LOGO-ORANGE.png
+Textures/LOGO-WHITE.png
+TODO.txt
+Textures/BLPconv.exe
+CHANGELOG.md
+.vscode/
+.release/
+Notes/
+Hekili Wrath.code-workspace

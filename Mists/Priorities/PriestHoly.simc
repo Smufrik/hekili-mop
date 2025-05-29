@@ -1,0 +1,54 @@
+# Priest: Holy
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+actions.precombat+=/inner_fire
+actions.precombat+=/power_word_fortitude,if=!buff.power_word_fortitude.up
+actions.precombat+=/chakra_sanctuary,if=!buff.chakra_sanctuary.up&!buff.chakra_serenity.up&!buff.chakra_chastise.up
+actions.precombat+=/variable,name=trinket_sync_slot,value=1,if=trinket.1.has_cooldown&(!trinket.2.has_cooldown|trinket.1.cooldown.duration>=trinket.2.cooldown.duration)
+actions.precombat+=/variable,name=trinket_sync_slot,value=2,if=trinket.2.has_cooldown&(!trinket.1.has_cooldown|trinket.2.cooldown.duration>trinket.1.cooldown.duration)
+
+# Main rotation - calls specialized action lists
+actions+=/silence
+actions+=/call_action_list,name=cooldowns
+actions+=/call_action_list,name=aoe_healing,if=active_enemies>=3|raid_health.deficit>10000
+actions+=/call_action_list,name=single_target
+
+# Cooldowns
+actions.cooldowns+=/potion,if=buff.bloodlust.react|target.time_to_die<=40
+actions.cooldowns+=/divine_hymn,if=raid_health.deficit>25000
+actions.cooldowns+=/guardian_spirit,if=health.pct<25
+actions.cooldowns+=/desperate_prayer,if=health.pct<50
+actions.cooldowns+=/berserking,if=buff.bloodlust.up
+actions.cooldowns+=/blood_fury,if=buff.bloodlust.up
+actions.cooldowns+=/arcane_torrent,if=mana.pct<95
+actions.cooldowns+=/shadowfiend,if=mana.pct<80
+actions.cooldowns+=/mindbender,if=talent.mindbender.enabled&mana.pct<80
+actions.cooldowns+=/lightwell,if=talent.lightwell.enabled
+actions.cooldowns+=/use_item,slot=trinket1,if=variable.trinket_sync_slot=1&buff.bloodlust.up
+actions.cooldowns+=/use_item,slot=trinket2,if=variable.trinket_sync_slot=2&buff.bloodlust.up
+
+# AoE healing rotation
+actions.aoe_healing+=/chakra_sanctuary,if=!buff.chakra_sanctuary.up
+actions.aoe_healing+=/circle_of_healing,if=raid_health.deficit>5000
+actions.aoe_healing+=/prayer_of_mending,if=!ticking
+actions.aoe_healing+=/divine_star,if=talent.divine_star.enabled&raid_health.deficit>5000
+actions.aoe_healing+=/cascade,if=talent.cascade.enabled&raid_health.deficit>5000
+actions.aoe_healing+=/halo,if=talent.halo.enabled&raid_health.deficit>10000
+actions.aoe_healing+=/holy_word_sanctuary,if=raid_health.deficit>10000
+actions.aoe_healing+=/prayer_of_healing,if=raid_health.deficit>10000
+actions.aoe_healing+=/renew,cycle_targets=1,max_cycle_targets=3,if=!ticking&health.pct<90
+actions.aoe_healing+=/binding_heal,if=health.pct<75&raid_health.deficit>5000
+actions.aoe_healing+=/holy_nova,if=active_enemies>=3&raid_health.deficit>5000&mana.pct>40
+actions.aoe_healing+=/heal
+
+# Single target healing rotation
+actions.single_target+=/chakra_serenity,if=!buff.chakra_serenity.up
+actions.single_target+=/prayer_of_mending,if=!ticking
+actions.single_target+=/flash_heal,if=buff.surge_of_light.up
+actions.single_target+=/holy_word_serenity,if=health.pct<75
+actions.single_target+=/flash_heal,if=health.pct<35
+actions.single_target+=/guardian_spirit,if=health.pct<25
+actions.single_target+=/renew,if=!ticking&health.pct<90
+actions.single_target+=/greater_heal,if=health.pct<75&buff.serendipity.react>=1
+actions.single_target+=/heal,if=health.pct<90

@@ -1,0 +1,93 @@
+# Druid: Feral
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat
+actions.precombat+=/cat_form
+actions.precombat+=/flask
+actions.precombat+=/food
+actions.precombat+=/mark_of_the_wild
+actions.precombat+=/healing_touch,if=talent.dream_of_cenarius.enabled&!buff.dream_of_cenarius_damage.up
+actions.precombat+=/savage_roar,if=!buff.savage_roar.up
+actions.precombat+=/stealth
+
+## Emergency Actions - Highest Priority
+actions+=/skull_bash
+actions+=/cat_form,if=!buff.cat_form.up
+actions+=/survival_instincts,if=health.pct<20
+actions+=/might_of_ursoc,if=health.pct<25
+actions+=/barkskin,if=health.pct<40
+
+## Talent Utilities
+actions+=/wild_charge,if=talent.wild_charge.enabled&target.distance>8
+actions+=/displacer_beast,if=talent.displacer_beast.enabled&target.distance>10
+actions+=/renewal,if=talent.renewal.enabled&health.pct<35
+actions+=/cenarion_ward,if=talent.cenarion_ward.enabled&health.pct<60
+
+## Opener from Stealth
+actions+=/ravage,if=buff.prowl.up|buff.stealth.up
+
+## Core Debuff Maintenance
+actions+=/faerie_fire,if=debuff.weakened_armor.stack<3&target.time_to_die>15
+
+## Major Cooldowns - Sync for Maximum DPS
+actions+=/tigers_fury,if=energy<=35&!buff.omen_of_clarity.react&(cooldown.berserk.remains>6|buff.berserk.up)
+actions+=/berserk,if=buff.tigers_fury.up&(combo_points>=4|target.time_to_die<15)
+actions+=/incarnation,if=talent.incarnation.enabled&buff.tigers_fury.up&(combo_points>=4|target.time_to_die<25)
+
+## Talent Cooldowns - Synergy with Major CDs
+actions+=/force_of_nature,if=talent.force_of_nature.enabled&(buff.tigers_fury.up|buff.berserk.up|cooldown.tigers_fury.remains>15)
+actions+=/natures_vigil,if=talent.natures_vigil.enabled&(buff.tigers_fury.up|buff.berserk.up)
+actions+=/heart_of_the_wild,if=talent.heart_of_the_wild.enabled&(buff.tigers_fury.up|buff.berserk.up)
+actions+=/berserking,if=buff.tigers_fury.up|buff.berserk.up
+
+## Utility Talents
+actions+=/ursols_vortex,if=talent.ursols_vortex.enabled&active_enemies>=3
+actions+=/mighty_bash,if=talent.mighty_bash.enabled&target.casting.react
+
+## AoE Situations (3+ targets)
+actions+=/thrash_cat,if=active_enemies>=3&dot.thrash_cat.remains<3&energy>=50
+actions+=/swipe_cat,if=active_enemies>=4&energy>=45
+
+## Dream of Cenarius Optimization
+actions+=/healing_touch,if=talent.dream_of_cenarius.enabled&buff.predatory_swiftness.up&!buff.dream_of_cenarius_damage.up&combo_points<5
+actions+=/healing_touch,if=talent.dream_of_cenarius.enabled&buff.natures_swiftness.up&!buff.dream_of_cenarius_damage.up
+
+## Energy Pooling for Optimal DPS
+actions+=/wait,sec=0.1,if=energy<50&!buff.berserk.up&!buff.omen_of_clarity.react&cooldown.tigers_fury.remains>3
+
+## Savage Roar Maintenance - Critical for DPS
+actions+=/savage_roar,if=buff.savage_roar.remains<2&combo_points>=1
+actions+=/savage_roar,if=buff.savage_roar.remains<6&combo_points>=5&target.time_to_die>10
+
+## Finisher Priority - Optimized for Maximum DPS
+# Rip during Tiger's Fury for snapshot
+actions+=/rip,if=combo_points>=5&(dot.rip.remains<3|buff.tigers_fury.up&dot.rip.multiplier<persistent_multiplier)&target.time_to_die>6
+# Execute range Ferocious Bite
+actions+=/ferocious_bite,if=target.health.pct<25&combo_points>=5&dot.rip.remains>4
+# Emergency Ferocious Bite to avoid energy cap
+actions+=/ferocious_bite,if=combo_points>=5&energy>=90&dot.rip.remains>6&buff.savage_roar.remains>6
+# Standard Ferocious Bite
+actions+=/ferocious_bite,if=combo_points>=5&dot.rip.remains>9&buff.savage_roar.remains>8
+
+## Bleed Application and Maintenance - Snapshot Optimization
+# Rake snapshot during Tiger's Fury or Dream of Cenarius
+actions+=/rake,if=(buff.tigers_fury.up|buff.dream_of_cenarius_damage.up)&dot.rake.multiplier<persistent_multiplier&target.time_to_die>dot.rake.remains
+# Rake refresh before expiration
+actions+=/rake,if=dot.rake.remains<3&target.time_to_die>15&energy>=35
+# Thrash refresh (single target for buff/debuff)
+actions+=/thrash_cat,if=dot.thrash_cat.remains<3&target.time_to_die>6&energy>=50
+
+## Combo Point Generation - Optimized Priority
+# Omen of Clarity Shred (free energy)
+actions+=/shred,if=buff.omen_of_clarity.react&energy>=0
+# Ravage when available (Predatory Swiftness or Stealth)
+actions+=/ravage,if=buff.predatory_swiftness.up|buff.stealth.up|buff.prowl.up
+# Mangle when behind target or at high energy
+actions+=/mangle_cat,if=(position.behind=0|energy>=80)&energy>=40
+# Standard Shred
+actions+=/shred,if=energy>=40&(combo_points<5|dot.rip.remains>4)
+
+## Emergency Actions
+actions+=/healing_touch,if=health.pct<20&(buff.predatory_swiftness.up|!in_combat)
+actions+=/rejuvenation,if=health.pct<50&!dot.rejuvenation.up&!in_combat

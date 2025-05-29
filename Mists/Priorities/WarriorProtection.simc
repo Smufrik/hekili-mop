@@ -1,0 +1,69 @@
+# Warrior: Protection
+# Updated May 28, 2025 - Modern Structure
+# MoP SimulationCraft APL v5.4.8
+
+## Precombat
+actions.precombat+=/battle_shout,if=!buff.str_agi_int.up&!buff.battle_shout.up
+actions.precombat+=/commanding_shout,if=!buff.stamina.up&!buff.commanding_shout.up
+actions.precombat+=/stance,choose=defensive
+actions.precombat+=/snapshot_stats
+actions.precombat+=/flask,type=earth
+actions.precombat+=/food,type=chun_tian_spring_rolls
+
+## Default actions
+actions+=/charge,if=time=0|movement.distance>8
+actions+=/pummel,if=target.debuff.casting.react
+actions+=/run_action_list,name=movement,if=movement.distance>5
+actions+=/berserker_rage,if=buff.enrage.down
+actions+=/use_item,name=trinket1,if=cooldown.shield_wall.remains>90
+actions+=/use_item,name=trinket2,if=cooldown.shield_wall.remains>90
+actions+=/blood_fury,if=buff.shield_block.up
+actions+=/berserking,if=buff.shield_block.up
+actions+=/arcane_torrent,if=rage<rage.max-40
+actions+=/lights_judgment,if=cooldown.shield_slam.remains
+actions+=/bag_of_tricks,if=cooldown.shield_slam.remains
+actions+=/potion,if=buff.shield_wall.up|target.time_to_die<25
+actions+=/call_action_list,name=defensives
+actions+=/run_action_list,name=single_target,if=active_enemies=1
+actions+=/run_action_list,name=aoe,if=active_enemies>=2
+
+## Defensive cooldowns
+actions.defensives+=/shield_wall,if=incoming_damage_2500ms>health.max*0.5
+actions.defensives+=/last_stand,if=incoming_damage_2500ms>health.max*0.35&cooldown.shield_wall.remains>10
+actions.defensives+=/demoralizing_shout,if=incoming_damage_2500ms>health.max*0.25
+actions.defensives+=/shield_barrier,if=buff.shield_barrier.down&(rage>=60|health.pct<50)
+actions.defensives+=/shield_block,if=buff.shield_block.down
+actions.defensives+=/spell_reflection,if=incoming_magic_damage_5s>health.max*0.15
+actions.defensives+=/healthstone,if=health.pct<35
+actions.defensives+=/impending_victory,if=health.pct<40&talent.impending_victory.enabled
+actions.defensives+=/victory_rush,if=health.pct<40&!talent.impending_victory.enabled
+
+## Single-target rotation
+actions.single_target+=/avatar,if=talent.avatar.enabled&(buff.shield_block.up|cooldown.shield_block.remains>8)
+actions.single_target+=/dragon_roar,if=buff.shield_block.up
+actions.single_target+=/thunder_clap,if=!dot.deep_wounds.ticking
+actions.single_target+=/shield_slam
+actions.single_target+=/revenge
+actions.single_target+=/devastate,if=debuff.sunder_armor.stack<3|(rage<90&dot.deep_wounds.remains<4)
+actions.single_target+=/storm_bolt
+actions.single_target+=/heroic_strike,if=rage>60
+actions.single_target+=/devastate
+actions.single_target+=/battle_shout,if=rage<rage.max-20
+actions.single_target+=/heroic_throw
+
+## AoE rotation
+actions.aoe+=/avatar,if=talent.avatar.enabled
+actions.aoe+=/thunder_clap
+actions.aoe+=/bladestorm
+actions.aoe+=/dragon_roar
+actions.aoe+=/shockwave
+actions.aoe+=/shield_slam
+actions.aoe+=/revenge
+actions.aoe+=/cleave,if=rage>60
+actions.aoe+=/devastate,if=debuff.sunder_armor.stack<3
+actions.aoe+=/battle_shout,if=rage<rage.max-20
+
+## Movement actions
+actions.movement+=/heroic_leap
+actions.movement+=/charge
+actions.movement+=/heroic_throw

@@ -1,0 +1,13 @@
+sudo: required
+language: c
+
+addons:
+  apt:
+    packages:
+    - pandoc
+
+branches:
+  only:
+  - /^v?\d+\.\d+(\.\d+)?(-\S*)?$/
+
+script: curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash
